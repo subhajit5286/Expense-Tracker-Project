@@ -2,8 +2,8 @@ var form=document.getElementById('addForm')
 
 form.addEventListener('submit', saveUser);//
 
-  function saveUser(e){
-    
+ async function saveUser(e){
+    try{
         e.preventDefault();
         console.log(e.target.email.value);
 
@@ -14,8 +14,30 @@ form.addEventListener('submit', saveUser);//
 
         }
         console.log(signupDetails)
-        // let response = await axios.post("http://localhost:4000/user/signup",signupDetails)
-    
+         let response = await axios.post("http://localhost:4000/user/signup",signupDetails)
+        // .then(response=>{
+        //   console.log(response.status)
+        //   window.location.href = "./login.html"
+        // })
+        // .catch(err=>{
+        //   console.log(err)
+        //   throw new Error('Failed to login')
+        // })
+        
+        console.log(response.status)
+        if(response.status === 201) {
+          window.location.href = "./login.html"
+
+        } else {
+          throw new Error('Failed to login')
+
+        }
+
+  }
+  catch(err){
+      document.body.innerHTML += `<div style="color:red;">${err} <div> `
+
+  }
      
     
 }
