@@ -23,3 +23,28 @@ exports.signUp = async (req,res,next) => {
 
     }
 }
+
+exports.login = async (req,res) => {
+    try {
+        const { email,password } = req.body ;
+        console.log(email);
+        if( isstringinvalid(email) || isstringinvalid(password)){
+            return res.status(400).json({err: "Bad params . something is missing"})
+        }
+      
+        const user = await User.findAll({where : { email }})
+        if(user.length > 0) {
+            if(user[0].password === password ){
+                res.status(200).json({ success: true, message: "User Logged in Successfully"})
+            } else {
+                return res.status(401).json({ success:false, message: "Password is incorrect"})
+            } 
+        } else {
+            return res.status(404).json({success: false, message:"User doesn't exist"})
+        }
+    } catch(err) {
+        
+        res.status(500).json({message:err , success:false})
+
+    }
+}
