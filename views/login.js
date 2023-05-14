@@ -27,6 +27,7 @@ form.addEventListener('submit', loginUser);//
         console.log(response.status)
         if(response.status === 200) {
             alert(response.data.message)
+            window.location.href = "./expense.html"
 
         } else {
           throw new Error(response.data.message)
