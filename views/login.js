@@ -27,6 +27,7 @@ form.addEventListener('submit', loginUser);//
         console.log(response.status)
         if(response.status === 200) {
             alert(response.data.message)
+            localStorage.setItem('token',response.data.token)
             window.location.href = "./expense.html"
 
         } else {

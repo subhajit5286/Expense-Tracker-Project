@@ -1,4 +1,8 @@
-var form=document.getElementById('addForm')
+var form=document.getElementById('addForm');
+var welcome = document.getElementById('welcome');
+
+ 
+
 
 form.addEventListener('submit', saveExpense);//
 
@@ -8,15 +12,16 @@ function saveExpense(event){
     const amount = event.target.amount.value;
     const description= event.target.description.value;
     const category = event.target.category.value;
-
+    const userId=1
     const obj = {
         amount,
         description,
-        category
+        category,
+        userId
 
     }
-
-    axios.post("http://localhost:4000/expense/add-expense",obj)
+    const token = localStorage.getItem('token');
+    axios.post("http://localhost:4000/expense/add-expense",obj, {headers: {"Authorization": token}})
        .then((response) => {
         showNewExpenseOnScreen(response.data.newExpense);
            console.log(response);
@@ -30,9 +35,15 @@ function saveExpense(event){
 }
 
 window.addEventListener("DOMContentLoaded",() => {
-    axios.get("http://localhost:4000/expense/get-expenses")
+    const token = localStorage.getItem('token');
+    axios.get("http://localhost:4000/expense/get-expenses",{ headers: {"Authorization": token}})
        .then((response) => {
-          console.log(response.data.allExpenses);
+          console.log(response.data.allExpenses,response.data.name);
+          const welcome = document.getElementById("welcome");
+          //console.log(welcome)
+         const childHtml = 
+         `<h1 style="color: red;font-family: sans-serif;margin-left: 45.5rem;" id="welcome">Welcome ${response.data.name} </h1>`
+         welcome.innerHTML =welcome.innerHTML+childHtml;
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
         //   })
@@ -71,7 +82,8 @@ function showNewExpenseOnScreen(expense) {
 
 function deleteExpense(expenseid) {
     console.log(expenseid);
-    axios.delete(`http://localhost:4000/expense/delete-expense/${expenseid}`)
+    const token = localStorage.getItem('token');
+    axios.delete(`http://localhost:4000/expense/delete-expense/${expenseid}`,{headers:{"Authorization":token}})
         .then((response) => {
            removeExpenseFromScreen(expenseid);
         })
