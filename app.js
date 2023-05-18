@@ -15,20 +15,28 @@ const app = express();
 app.use(cors());
 const Expense = require('./models/expense');
 const User = require('./models/user');
+const Order = require('./models/orders');
 
 const userRoutes = require('./routes/user');    
 const expenseRoutes = require('./routes/expense');
+const purchaseRoutes = require('./routes/purchase');
+
 
 app.use(bodyParser.json({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));  
 
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
+app.use('/purchase',purchaseRoutes);
 
 
 //app.use(errorController.get404);;
 User.hasMany(Expense);
 Expense.belongsTo(User);
+
+User.hasMany(Order);
+Order.belongsTo(User);
+
 sequelize 
   .sync({force:false}) 
   .then(result => {

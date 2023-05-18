@@ -1,12 +1,23 @@
 var form=document.getElementById('addForm');
-var welcome = document.getElementById('welcome');
+
 
  
 
 
 form.addEventListener('submit', saveExpense);//
 
+function logOut(){
+    //e.preventDefault();
+    alert('User will Logged Out..')
+    localStorage.removeItem('token')
+    window.location.href = "./login.html"
 
+}
+function showPremiumuserMessage(){
+    document.getElementById('buy premium').style.visibility = "hidden"
+    document.getElementById('message').innerHTML = "You are a Premium User"
+    
+}
 function saveExpense(event){
     event.preventDefault();
     const amount = event.target.amount.value;
@@ -44,6 +55,10 @@ window.addEventListener("DOMContentLoaded",() => {
          const childHtml = 
          `<h1 style="color: red;font-family: sans-serif;margin-left: 45.5rem;" id="welcome">Welcome ${response.data.name} </h1>`
          welcome.innerHTML =welcome.innerHTML+childHtml;
+         if(response.data.isPremium){
+            showPremiumuserMessage()
+             
+        }
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
         //   })
@@ -97,5 +112,42 @@ function removeExpenseFromScreen(expenseid) {
     if (childNodeToBeDeleted) {
         parentNode.removeChild(childNodeToBeDeleted);
     }
+}
+
+document.getElementById('buy premium').onclick = async function (e) {
+    try{
+        const token = localStorage.getItem('token')
+    const response = await axios.get('http://localhost:4000/purchase/premiummembership',{ headers: {"Authorization": token}});
+    console.log(response);
+    var options = 
+    {
+        "key" : response.data.key_id,
+        "order_id" : response.data.order.id,
+         "handler": async function (response) {
+             await axios.post('http://localhost:4000/purchase/updatetransactionstatus',{
+                 order_id: options.order_id,
+                 payment_id: response.razorpay_payment_id,
+
+             },{headers:{"Authorization":token}} )
+
+             alert('You are a Premium User Now')
+             document.getElementById('buy premium').style.visibility = "hidden"
+             document.getElementById('message').innerHTML = "You are a Premium User"
+             localStorage.setItem('isadmin',true)
+             localStorage.setItem('token',res.data.token)
+             
+         },
+    };
+     const rzp1 = new Razorpay(options);
+     rzp1.open();
+     e.preventDefault();
+
+     rzp1.on('payment.failed',function(response){
+         console.log(response);
+         alert('Something went wrong')
+     });
+    }catch(err){
+        console.log(err);
+    } 
 }
 
