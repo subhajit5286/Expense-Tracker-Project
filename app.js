@@ -20,6 +20,7 @@ const Order = require('./models/orders');
 const userRoutes = require('./routes/user');    
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
+const leaderboardRoutes = require('./routes/leaderboard');
 
 
 app.use(bodyParser.json({ extended: false }));
@@ -28,6 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase',purchaseRoutes);
+app.use('/premium',leaderboardRoutes);
 
 
 //app.use(errorController.get404);;

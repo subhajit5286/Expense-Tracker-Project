@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded",() => {
          welcome.innerHTML =welcome.innerHTML+childHtml;
          if(response.data.isPremium){
             showPremiumuserMessage()
-             
+            showLeaderboard()
         }
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
@@ -149,5 +149,35 @@ document.getElementById('buy premium').onclick = async function (e) {
     }catch(err){
         console.log(err);
     } 
+}
+
+async function showLeaderboard(){
+    try{
+    const token = localStorage.getItem('token');
+    console.log(token)
+    const userLeaderBoardArray = await axios.get("http://localhost:4000/premium/showLeaderBoard",{headers:{"Authorization":token}} )
+         console.log(userLeaderBoardArray);
+         const parentNode = document.getElementById("items1");
+         parentNode.innerHTML =""
+         console.log(parentNode)
+         userLeaderBoardArray.data.forEach((userDetails) => {
+            const childHTML = `<li class="list-group-item" style="display:inline-block;" >
+                        <div class="row" >
+                            <div class="col-sm-6" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
+                            <span >${userDetails.name}</span>
+                            </div>
+                            <div class="col-sm-6" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
+                            <span>${userDetails.total_cost}</span>
+                            </div>
+                            
+                        </div>        
+                    </li>`;
+    parentNode.innerHTML = parentNode.innerHTML + childHTML;
+            
+        })
+    } catch(err){
+            console.log(err)
+        }
+   
 }
 
