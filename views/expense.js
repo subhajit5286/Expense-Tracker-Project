@@ -56,8 +56,11 @@ window.addEventListener("DOMContentLoaded",() => {
          `<h1 style="color: red;font-family: sans-serif;margin-left: 45.5rem;" id="welcome">Welcome ${response.data.name} </h1>`
          welcome.innerHTML =welcome.innerHTML+childHtml;
          if(response.data.isPremium){
-            showPremiumuserMessage()
+           showPremiumuserMessage()
             showLeaderboard()
+        }
+        if(!response.data.isPremium){
+            document.getElementById('leaderboard').style.visibility = 'hidden'
         }
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
