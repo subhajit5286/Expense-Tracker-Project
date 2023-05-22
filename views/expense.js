@@ -170,7 +170,7 @@ async function showLeaderboard(){
                             <span >${userDetails.name}</span>
                             </div>
                             <div class="col-sm-6" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
-                            <span>${userDetails.total_cost}</span>
+                            <span>${userDetails.totalExpenses}</span>
                             </div>
                             
                         </div>        
