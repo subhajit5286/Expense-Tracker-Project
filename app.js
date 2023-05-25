@@ -21,6 +21,7 @@ const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
 const leaderboardRoutes = require('./routes/leaderboard');
+const forgotPasswordRoutes = require('./routes/forgotPassword');
 
 
 app.use(bodyParser.json({ extended: false }));
@@ -30,6 +31,7 @@ app.use('/user', userRoutes);
 app.use('/expense', expenseRoutes);
 app.use('/purchase',purchaseRoutes);
 app.use('/premium',leaderboardRoutes);
+app.use('/password',forgotPasswordRoutes);
 
 
 //app.use(errorController.get404);;
