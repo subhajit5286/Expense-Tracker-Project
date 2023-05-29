@@ -39,7 +39,7 @@ const forgotPassword = async (req,res) =>{
                  </p>
                 <p>If you did not request this password reset, please ignore this email and contact us immediately.
                 </p><p>Thank you,
-                </p><p>Expensify</p>
+                </p><p>Expensifyz</p>
                 `
         })
             return res.status(200).json({ message:  'Link to reset password sent to your mail ', success: true })

@@ -6,6 +6,9 @@ var form=document.getElementById('addForm');
 
 form.addEventListener('submit', saveExpense);//
 
+function download(){
+    console.log('clicked')
+}
 function logOut(){
     //e.preventDefault();
     alert('User will Logged Out..')
@@ -61,6 +64,7 @@ window.addEventListener("DOMContentLoaded",() => {
         }
         if(!response.data.isPremium){
             document.getElementById('leaderboard').style.visibility = 'hidden'
+            document.getElementById('downloadexpense').disabled = true
         }
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
