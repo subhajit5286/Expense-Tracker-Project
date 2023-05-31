@@ -6,9 +6,36 @@ var form=document.getElementById('addForm');
 
 form.addEventListener('submit', saveExpense);//
 
-function download(){
-    console.log('clicked')
+async function download(){
+try{
+const token = localStorage.getItem('token');
+const response = await axios.get('http://localhost:4000/expense/download', { headers: {"Authorization" : token} })
+console.log('clicked')
+if(response.status === 200){
+        // document.getElementById('fileDownloadedbutton').hidden = false;
+        var a = document.createElement("a");
+        a.href = response.data.fileURl;
+        a.download = 'myexpense.csv';
+        a.click();
+    } else {
+        throw new Error(response.data.message)
+    }
 }
+catch(err) {
+        console.log(err);
+    }
+    
+}
+
+function showDownloadedFiles() {
+window.location.href = "./filedownloadlist.html"
+
+}
+
+
+
+
+
 function logOut(){
     //e.preventDefault();
     alert('User will Logged Out..')

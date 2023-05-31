@@ -1,6 +1,46 @@
 const Expense = require('../models/expense');
 const User = require('../models/user');
 const sequelize = require('../util/database');
+//const AWS = require('aws-sdk');
+const S3services = require('../services/S3services');
+const FileDownloaded = require('../models/filesdownloaded');
+
+
+
+exports.downloadexpense = async (req,res) =>{
+    try{
+         const expenses = await req.user.getExpenses();
+  console.log(expenses);
+  const stringifiedExpenses = JSON.stringify(expenses);
+  const userId = req.user.id;
+  const filename = `Expense${userId}/${new Date()}.txt`;
+  const fileURl = await S3services.uploadToS3(stringifiedExpenses,filename);
+   await FileDownloaded.create({userId: req.user.id, urls: fileURl});
+  res.status(200).json({fileURl,success:true})
+    } catch(err){
+        console.log(err);
+        res.status(500).json({fileURl:'',success:false,err:err})
+    }
+ 
+}
+
+exports.listOfFilesDownloaded = async (req, res) => {
+  try{
+      if(req.user.ispremiumuser) {
+          const filesDownloaded = await FileDownloaded.findAll({where: {userId: req.user.id}})//{where: {userId: req.user.id}});
+          const urls = filesDownloaded.map(download => download.urls);
+          console.log("all downloads====>>>",urls);
+
+          res.status(200).json(urls);
+      }
+  }catch (err) {
+      console.log(err);
+  }
+}
+
+
+
+
 exports.addExpense = async (req, res, next)=> {
     const t = await sequelize.transaction();
    try{   
