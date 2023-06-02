@@ -108,6 +108,9 @@
             
             <div class="col-md-8">
                 <div class="row" style="background-color: aquamarine;color:brown">
+                    <div class="col-sm-1" style="text-align:center;font-family: sans-serif;font-size: 21px;">
+                    <span >Id.</span>
+                    </div>
                     <div class="col-sm-3" style="text-align:center;font-family: sans-serif;font-size: 21px;">
                     <span >Expense Amount</span>
                     </div>
@@ -117,16 +120,32 @@
                     <div class="col-sm-3" style="text-align:center;font-family: Trebuchet MS;font-size: 21px;">
                     <span>Expense Category</span>
                     </div>
-                    <div class="col-sm-3" style="text-align:center;font-family: Trebuchet MS;font-size: 21px;margin-right:0rem">
+                    <div class="col-sm-2" style="text-align:center;font-family: Trebuchet MS;font-size: 21px;margin-right:0rem">
                     <span>
                         Action
                     </span>
                     </div>
                 </div>    
 
-                <ul id="items" class="list-group" style="list-style: none; display: flex;" >
+            <ol type="1" id="items" class="list-group" style="list-style: none; display: flex;" >
                     
-                </ul>
+            </ol>
+                <div class="form-group row">
+                            <label for="" class="col-form-label col-sm-2">Rows Per Page</label>
+                               
+                                <div class=" col-sm-3">
+                                    <select class="form-select" id="paginationLimit">
+                                        <option value='2'>Select</option>
+                                        <option value='2'>2</option>
+                                        <option value='4'>4</option>
+                                        <option value='6'>6</option>
+                                        
+                                    </select>
+                             </div>
+                             <div class=" col-sm-7">
+                             <div class="btn-group btn-group-sm" role="group" id="paginationButtons"></div>
+                            </div>
+                        </div>
               </div>
           </div>
         

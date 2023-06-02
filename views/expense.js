@@ -77,39 +77,127 @@ function saveExpense(event){
 
 window.addEventListener("DOMContentLoaded",() => {
     const token = localStorage.getItem('token');
-    axios.get("http://localhost:4000/expense/get-expenses",{ headers: {"Authorization": token}})
-       .then((response) => {
-          console.log(response.data.allExpenses,response.data.name);
+    var base64Url = token.split('.')[1];
+    var decodedToken = JSON.parse(window.atob(base64Url));
+    console.log(decodedToken.ispremiumuser)
+    // axios.get("http://localhost:4000/expense/get-expenses?page=1&limit=1",{ headers: {"Authorization": token}})
+    //    .then((response) => {
+    //       console.log(response.data.allExpensesDetails,response.data.balance);
           const welcome = document.getElementById("welcome");
           //console.log(welcome)
          const childHtml = 
-         `<h1 style="color: red;font-family: sans-serif;margin-left: 45.5rem;" id="welcome">Welcome ${response.data.name} </h1>`
+         `<h1 style="color: red;font-family: sans-serif;margin-left: 45.5rem;" id="welcome">Welcome ${decodedToken.name} </h1>`
          welcome.innerHTML =welcome.innerHTML+childHtml;
-         if(response.data.isPremium){
+         if(decodedToken.ispremiumuser){
            showPremiumuserMessage()
             showLeaderboard()
         }
-        if(!response.data.isPremium){
+        if(!decodedToken.ispremiumuser){
             document.getElementById('leaderboard').style.visibility = 'hidden'
             document.getElementById('downloadexpense').disabled = true
         }
         //   response.data.expenses.forEach(expense => {
         //     showNewExpenseOnScreen(expense);
         //   })
-           for(var i=0; i<response.data.allExpenses.length; i++){
-              showNewExpenseOnScreen(response.data.allExpenses[i]);
-           }
+           // for(var i=0; i<response.data.allExpenses.length; i++){
+           //    showNewExpenseOnScreen(response.data.allExpenses[i]);
+           // }
 
 
-       }).catch((error) => {
-            console.log(error);
-       });
+       // }).catch((error) => {
+       //      console.log(error);
+       // });
+          getAllExpenses();
+    setPaginationLimit();
 });
+async function getAllExpenses(page = 1, limit = 2) {
+    const token = localStorage.getItem('token');
+    if(localStorage.getItem('limit')){
+        limit = localStorage.getItem('limit');
+    }
+    const res = await axios.get(`http://localhost:4000/expense/get-expenses?page=${page}&limit=${limit}`, {headers: {'Authorization': token}})
+        const expenses = res.data.allExpensesDetails;
+        document.getElementById("items").innerHTML=''
+        expenses.forEach((expense) => {
+            showNewExpenseOnScreen(expense)
+        })
+       // balance = res.data.balance;
+        if(expenses.length <= 0){
+            //const paginationRowDiv = document.getElementById('paginationRowDiv');
+            //paginationRowDiv.innerText = '';
+            return;
+        }
+        const currentPage = res.data.currentPage;
+        const prevPage = res.data.prevPage;
+        const nextPage = res.data.nextPage;
+        const lastPage = res.data.lastPage;
+        paginationInDOM(currentPage, prevPage, nextPage,lastPage, limit);
+}
+
+function paginationInDOM(currentPage, prevPage, nextPage, lastPage,limit = 2){
+    currentPage = parseInt(currentPage);
+    prevPage = parseInt(prevPage);
+    nextPage = parseInt(nextPage);
+    lastPage = parseInt(lastPage);
+    console.log(lastPage)
+    document.getElementById('paginationButtons').innerText = '';
+
+    const currentPageBtn = document.createElement('button');
+    currentPageBtn.innerText = 'currentPage';
+    currentPageBtn.className = 'btn btn-secondary';
+    currentPageBtn.addEventListener('click', () => getAllExpenses(currentPage, limit));
+
+    const prevPageBtn = document.createElement('button');
+    prevPageBtn.innerText = '<< Prev';
+    prevPageBtn.className = 'btn btn-outline-secondary';
+    prevPageBtn.addEventListener('click', () => getAllExpenses(prevPage, limit));
+
+    const nextPageBtn = document.createElement('button');
+    nextPageBtn.innerText = 'Next >>';
+    nextPageBtn.className = 'btn btn-outline-secondary';
+    nextPageBtn.addEventListener('click', () => getAllExpenses(nextPage, limit));
+
+    const lastPageBtn = document.createElement('button');
+    lastPageBtn.innerText = 'Last Page';
+    lastPageBtn.className = 'btn btn-outline-secondary';
+    lastPageBtn.addEventListener('click', () => getAllExpenses(lastPage, limit));
+
+    if(prevPage){
+        prevPageBtn.classList.remove('disabled');
+    }else{
+        prevPageBtn.classList.add('disabled');
+    }
+    if(nextPage){
+        nextPageBtn.classList.remove('disabled');
+    }else{
+        nextPageBtn.classList.add('disabled');
+    }
+
+    paginationButtons.appendChild(prevPageBtn);
+    paginationButtons.appendChild(currentPageBtn);
+    paginationButtons.appendChild(nextPageBtn);
+    paginationButtons.appendChild(lastPageBtn);
+}
+
+function setPaginationLimit(){
+    localStorage.removeItem('limit')
+    const paginationLimit = document.getElementById('paginationLimit');
+    paginationLimit.addEventListener('change', () => {
+        localStorage.setItem('limit', paginationLimit.value);
+       // window.location.reload();
+        limit = localStorage.getItem('limit');
+        getAllExpenses(page=1, limit);
+    });
+}
 
 function showNewExpenseOnScreen(expense) {
+   
     const parentNode = document.getElementById("items");
     const childHTML = `<li class="list-group-item" style="display:inline-block;" id=${expense.id}>
                         <div class="row" >
+                            <div class="col-sm-1" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
+                            <span >${expense.id} </span>
+                            </div>
                             <div class="col-sm-3" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
                             <span >${expense.amount}</span>
                             </div>
@@ -119,7 +207,7 @@ function showNewExpenseOnScreen(expense) {
                             <div class="col-sm-3" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;">
                             <span>${expense.category}</span>
                             </div>
-                            <div class="col-sm-3" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;margin-right:0rem">
+                            <div class="col-sm-2" style="text-align:center;font-family: Trebuchet MS;font-size: 20px;margin-right:0rem">
                             <span>
                                  <button class="btn btn-danger" onclick=deleteExpense('${expense.id}')>Delete</button>
                             </span>
@@ -127,6 +215,7 @@ function showNewExpenseOnScreen(expense) {
                         </div>        
                     </li>`;
     parentNode.innerHTML = parentNode.innerHTML + childHTML;
+  
 }
 
 function deleteExpense(expenseid) {
