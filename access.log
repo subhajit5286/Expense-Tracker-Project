@@ -1,0 +1,4 @@
+::1 - - [05/Jun/2023:08:59:17 +0000] "GET /premium/showLeaderBoard HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [05/Jun/2023:08:59:18 +0000] "GET /expense/get-expenses?page=1&limit=2 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [05/Jun/2023:09:00:33 +0000] "GET /premium/showLeaderBoard HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+::1 - - [05/Jun/2023:09:00:33 +0000] "GET /expense/get-expenses?page=1&limit=2 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"

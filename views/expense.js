@@ -112,6 +112,8 @@ window.addEventListener("DOMContentLoaded",() => {
 });
 async function getAllExpenses(page = 1, limit = 2) {
     const token = localStorage.getItem('token');
+    // var w = window.innerWidth;
+    // console.log(w)
     if(localStorage.getItem('limit')){
         limit = localStorage.getItem('limit');
     }
